@@ -20,8 +20,9 @@
 action :install do
   execute "install-composer-packages" do
     only_if "which composer >>/dev/null"
-    not_if "test -f #{new_resource.project_dir}/composer.lock"
     cwd new_resource.project_dir
+    user new_resource.user
+    group new_resource.group
     dev = new_resource.dev ? "--dev" : ''
     command "composer install -n --no-ansi -q #{dev}"
   end
@@ -30,6 +31,8 @@ action :update do
   execute "update-composer-packages" do
     only_if "which composer >>/dev/null"
     cwd new_resource.project_dir
+    user new_resource.user
+    group new_resource.group
     dev = new_resource.dev ? "--dev" : ''
     command "composer update -n --no-ansi -q #{dev}"
   end
@@ -39,7 +42,9 @@ action :dump_autoload do
   execute "dump-composer-autoload" do
     only_if "which composer >>/dev/null"
     cwd new_resource.project_dir
+    user new_resource.user
+    group new_resource.group
     dev = new_resource.dev ? "--dev" : ''
-    command "composer update -n --no-ansi -q #{dev}"
+    command "composer dump-autoload -n --no-ansi -q -o #{dev}"
   end
 end
